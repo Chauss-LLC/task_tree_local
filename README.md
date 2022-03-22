@@ -1,113 +1,114 @@
 # task_tree_local
 
-<img src="logo_task_tree.png" alt="Логотип проекта" width="200"/>
+<img src="logo_task_tree.png" alt="Logo of the project" width="200"/>
 
-Это локальная часть большого проекта `task_tree`.
+This is part of the big project `task_tree` for local use.
 
-## Постановка задачи
+## The problem
 
-Многие люди нуждаются в каком-то структурированном способе фиксировать свои задачи.
-Некоторые пользуются ручными дневниками, кто-то - календарем, а кто-то предпочитает хранить свои задачи в текстовом файле в папке с документами или на рабочем столе.
-Во всех этих подходах есть свои плюсы и минусы. Существует не бесконечное, но достаточно большое кол-во утилит, которые позволяют организовывать свои задачи,
-устанавливать дедлайны, прикреплять файлы, делиться списком задач и т.д. Большинство из них, так или иначе, будут платными.
+Many people have a need in something like a structural way to note their tasks.
+Someone use a handle diary, someone - a calendar, but someone prefer to save his goals in a text file in the folder with documents or on the desktop.
+In all that ways there are advantages and disadvantages. There are not infinite but big enough amount of utilities that allow to organize own tasks, set deadlines, attach files, share the list of tasks, etc. Anyway, many of them, will be paid.
 
-Мы предлагаем новый продукт - task_tree, который, по сути, работает как простенькая иерархическая база данных. От корня дерева идут ветви к другим поддеревьям, 
-что позволяет наглядно представлять себе задачу и ее внутреннюю структуру. Это может быть полезно любым людям, которые нуждаются в способе фиксировать свои планы.
+We introduce new product - task_tree that, in fact, works like a simple hierarchical database. The branches go from the root task to sub-tasks, that allow to visually represent the problem and its internal structure. This may be useful for any people who need in a way to 
+fixate their plans.
 
-Чтобы не быть голословными, рекомендуем обратиться к этому источнику, где вы на практике можете ощутить все положительные стороны такого подхода:
+To not be unfounded, we recommend to refer to this source, where you can feel all positive sides of the approach on practice:
 
 https://www.mindmeister.com/
 
-## Базовая функциональность
+## Base functionality
 
-Данная часть большого проекта носит лаконичное название `task_tree_local` и предоставляет все удобства для локального использования.
+This part of the huge project is laconically called `task_tree_local` and it present all facilities for local usage.
 
-Реализовав основной функционал, мы можем сосредоточиться на добавлении дополнительных возможностей, реализации собственного веб-сервиса, подобного `mindmeister` и др.
+After implementing the main functionality we will be able to focus on adding some extra abilities, creating our own web-service like
+`mindmeister` etc.
 
-Возможно, приложение будет разбито на несколько модулей, но целевой функционал должен быть следующим:
+Maybe, the application will be broke down into several modules, but the goal functionality must be the next:
 
-- Возможность создавать, модифицировать, редактировать и удалять поддеревья на локальной машине. 
-	- Сохранение и удаление файлов с поддеревьями.
-	- Реализация простого command-line интерфейса, в котором целевой пользователь может:
-		* Просматривать сохраненные поддеревья.
-		* Добавлять к поддеревьям новые ветви или вершины.
-		* Отмечать определенные задачи как выполненные или не выполненные.
-	- Экспорт дерева в текстовый файл, импорт из текстового файла.
-		* Файл должен быть человекочитаемый, чтобы пользователь мог изменить его при помощи текстового редактора, а затем выполнить импорт.
+- Ability to create, modify, edit and delete trees on the local machine.
+	- Save and delete files with trees.
+	- Implementation of a simple command-line interface, where the target user can:
+		* Browse saved trees.
+		* Add new tasks to trees.
+		* Mark certain tasks as solved or not solved.
+	- Export the tree to the text files, import the tree from the text file.
+		* File must be human-readable so the user can edit it with text editor and then perform import.
 
-## Предполагаемые инструменты решения
+## Suggested solution tools
 
-* Python модули:
+* Python modules:
 	* `json`;
-	* `psycopg2`, `psycopg2-binary` or `sqlite3` (в зависимости от того, какую БД мы выберем);
-	* `cmd`, `shlex`, `argparse`, `Colorama` (для cli);
-	* `rich` (для вывода дерева в терминал).
+	* `psycopg2`, `psycopg2-binary` or `sqlite3` (depending on the database we choose);
+	* `cmd`, `shlex`, `argparse`, `Colorama` (for CLI);
+	* `rich` (for printing the tree to the console).
 
-## Предполагаемый cli
+## Suggested CLI
 
-Режим работы возможен через непосредственное обращение к модулю: 
+The way of work may be implemented as immediate appeal to the module:
 ```
-python -m task_tree <command>           # Общая схема взаимодействия с проектом.
-python -m task_tree show tree Homework  # Пример.
+python -m task_tree <command>           # Common scheme of the interactions with the project.
+python -m task_tree show tree Homework  # Example.
 ```
-Предоставляемый набор команд:
+The presented set of commands:
 ```
-# Для работы с деревьями:
-list                            # Вывод идентификаторов всех сохраненных деревьев.
-show   tree <TREE-ID>           # Вывод конкретного дерева.
-add    tree <TREE-ID>           # Создание дерева задач.
-delete tree <TREE-ID>           # Удаление дерева.
-export tree <TREE-ID>           # Вывод дерева в текстовом виде.
-import tree <TREE-ID>           # Импорт дерева из файла.
-check  tree <TREE-ID>           # Проверка того, что все задачи в дереве решены.
-# Для работы с конкретным деревом:
-show   task <TASK-ID> tree <TREE-ID>          # Показать статус и другие данные о конкретной задаче в указанном дереве.
-mark   task <TASK-ID> <STATUS> tree <TREE-ID> # Установка статуса на конкретную задачу в указанном дереве. 
+# Interactions with trees:
+list                            # Print the identifiers of all saved trees.
+show   tree <TREE-ID>           # Print certain tree.
+add    tree <TREE-ID>           # Create a tree of tasks.
+delete tree <TREE-ID>           # Tree deletion.
+export tree <TREE-ID>           # Print the tree in a text way.
+import tree <TREE-ID>           # Import tree from file.
+check  tree <TREE-ID>           # Check that all tasks in the tree are solved.
+# Interactions with certain tree:
+show   task <TASK-ID> tree <TREE-ID>          # Show the state and other data of the certain task in the specified tree.
+mark   task <TASK-ID> <STATUS> tree <TREE-ID> # Set the state of the certain task in the specified tree.
 add    task <TASK-ID> tree <TREE-ID>
 delete task <TASK-ID> tree <TREE-ID>
-# Для вызова cli:
+# For calling CLI:
 cli
 ```
-Если пользователь хочет command-line интерфейс, то мы его ему предоставим. Команды будут теми же, но для удобства мы предоставим возможность выбирать дерево для работы,
-теперь пользователю не надо будет каждый раз вбивать `tree <TREE-ID>`.
+We will present the command-line interface if the user want one. The commands will be the same, but for convenience we provide
+the ability to select the tree for interaction, so now the user don't need to type the `tree <TREE-ID>` every time.
 
-Текст, который можно локализовать - это дополнительные сообщения или тексты ошибок, которые мы будем печатать пользователю при обращении к модулю.
+The text for localization - it is additional messages or text of errors, that we will print for the user on appeal to the module.
 
-## Рабочий процесс пользователя
+## User workflow
 
-* Когда пользователь садится за свой ноутбук, он загружает ОС. 
-* Пока ОС загружается, пользователь продумывает задачи, которые он должен выполнить за данный сеанс работы с компьютером.
-* Пользователь открывает наш продукт - запускает нужный модуль через терминал. 
-* Последовательностью команд пользователь создает дерево задач. У каждой задачи есть 3 состояния:
-	* Необходимо выполнить. (состояние по умолчанию)
-	* Завершено с успехом. 
-	* Завершено с провалом.
-* У задач есть задачи-родители и задачи-потомки. Наш проект обязательно предлагает следующий функционал относительно автоматизации:
-	* Если пользователь отметил задачу решенной, то все ее задачи-потомки автоматически обозначаются решенными.
-	* Если пользователь отметил задачу решенной с провалом, то ее родитель отмечается решенным с провалом.
-* Далее пользователь начинает выполнять задачи, по мере их решения он возвращается к нашему модулю, чтобы пометить нужную задачу завершенной с успехом или провалом.
-* В конце сеанса работы пользователь проверяет дерево задач (`check tree`) на тот факт, что оно полностью выполнено с успехом.
-* Если не все задачи выполнены, пользователь сохраняет дерево для следующего сеанса работы.
-	* В отличие от блокнота, в котором пользователю, может быть, и будет удобней работать, наш продукт сохраняет файл в каталог по умолчанию.
-	* Таким образом пользователю не надо задумываться о том, где хранятся деревья.
-* Завершение работы.
+* When the user sits down at the laptop, he/she then loads the OS.
+* While OS is loading, the user thinks through all tasks that he/she must to solve in the current session of the work with laptop.
+* The user then opens our product - runs the necessary module though the terminal.
+* The user creates the task tree by sequence of commands. Every task have one of 3 states:
+	* Pending. (the default one)
+	* Solved.
+	* Failed.
+* Every task have task-parents and tasks-children. Our project surely offer the next functionality for automation:
+	* If the user sets the task as solved, all the children tasks automatically are set to be solved.
+	* Vice versa: if the user sets all the subtasks as solved, the task-parent is set to be solved.
+	* If the user sets the task as failed, the task-parent is set to be failed.
+* After that the user starts to solve problems, as he/she solves the new one he/she goes back to our module and mark the necessary task as solved or failed.
+* In the session end the user checks the task tree (`check tree` command) for the fact that it was completely solved with success.
+* If not all the tasks are solved the user saves the tree for the next work session.
+	* Unlike notepad what may be a more convenient for the user, our product saves the file in the default directory.
+	* In this way the user don't care about the place where all trees are stored.
+* The session completion.
 
-## Перспективы данного направления
+## Perspectives for this direction
 
-* От фронтенда до REST API.
-* От телеграммного бота до приложений на android.
-* От прикрепления фотографий до share-деревьев и прикрепления любых файлов или заметок. 
-* Комментирование.
-* От автоматических событий до собственного языка управления сценариями.
-* От импорта github issue до экспорта в google calendar.
-* Обратите внимание, что модуль может стать полноценным питоньим модулем и залететь на `pypi`!
-* Сериализация и десериализация. Экспорт дерева в картинку. GUI.
-* В случае сервера можно выполнять выборочный share: делиться не деревом, а конкретными вершинами.
-* Добавление делайнов к вершинам. Вывод не в виде дерева, а в виде расписания. 
-* Напоминания и уведомления.
-* Статистика (отображение состояния выполненной задачи в процентах).
-* Метки или тэги, по которым удобно было бы быстро перемещаться по дереву.
-* Можно указывать стоимость каждой вершины и автоматически считать стоимость всех запланированных дел.
-* и тд.
+* From frontend to REST API.
+* From telegram bot to android apps.
+* From pictures attachment to the tree sharing and attachment of any files or notes.
+* Commenting.
+* From automation events to the own scenarios management language.
+* From import of github issues to the export to google calendar.
+* Note, that our module may become the full-fledged python module and be flied to the `pypi`!
+* Serialization and deserialization. Export of the tree into the picture. GUI.
+* In the case of the backend we are able to make a selective share: we can share not only the tree but separate subtrees.
+* Adding deadlines to the tasks. Print not in the tree form but like timetable.
+* Reminders and notifications.
+* Some statistics (presenting the state of the task in the percents solved).
+* Tags with which it will be convenient to quickly navigate through the tree.
+* It is possible to set the cost of each vertex and automatically count the cost of all the planned businesses.
+* etc.
 
-Это список возможных направлений разработки. Очевидно, что это не уместится в семестровый проект, однако само наличие такого спектра возможностей и направлений развития лишь подтверждает наш выбор в сторону именно `task_tree`.
+Here is the list of available development directions. Obviously, all that wont fit up into the semester project, anyway the existence of such a range of abilities and development directions itself already confirms our choose for `task_tree`.
