@@ -4,6 +4,8 @@
 
 This is part of the big project `task_tree` for local use.
 
+[Русская документация здесь.](README-ru.md)
+
 ## The problem
 
 Many people have a need in something like a structural way to note their tasks.
@@ -112,3 +114,5 @@ The text for localization - it is additional messages or text of errors, that we
 * etc.
 
 Here is the list of available development directions. Obviously, all that wont fit up into the semester project, anyway the existence of such a range of abilities and development directions itself already confirms our choose for `task_tree`.
+
+<!-- TODO: translate new section from russian to english. -->
