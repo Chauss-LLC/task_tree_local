@@ -1,0 +1,26 @@
+name: Python linters and code checking
+
+on: 
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  check_code:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r linters/linters_requirements.txt
+        # Add your dependences here if your python can not compile without them.
+    - name: Run linters script
+      run: |
+        chmod +x linters/linters_run.sh
+        ./linters/linters_run.sh $(git ls-files '*.py')
