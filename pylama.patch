@@ -1,0 +1,12 @@
+--- context2.py	2022-03-29 17:51:41.041192251 +0300
++++ context.py	2022-03-29 17:50:42.228639059 +0300
+@@ -181,7 +181,8 @@
+         err = Error(filename=self.filename, **params)
+         number = err.number
+ 
+-        if SKIP_PATTERN(self.lines[err.lnum - 1]):
++        if (err.lnum - 1 not in range(len(self.lines)) or
++                SKIP_PATTERN(self.lines[err.lnum - 1])):
+             return None
+ 
+         if filtrate:

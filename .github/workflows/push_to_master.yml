@@ -18,9 +18,13 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r linters/linters_requirements.txt
-        # Add your dependences here if your python can not compile without them.
-    - name: Run linters script
+        pip install pylama black
+        # Add your dependences here if your package can not compile without them.
+    - name: Patch pylama
       run: |
-        chmod +x linters/linters_run.sh
-        ./linters/linters_run.sh $(git ls-files '*.py')
+        # Current pylama version fails if you try to check empty files. This patch fix the crash.
+        patch $(echo $(pip show pylama | grep "Location" | sed "s/Location: //g")"/pylama/context.py") pylama.patch
+    - name: Autoformat code with black
+      run: python -m black -l 100 $(git ls-files '*.py')
+    - name: Check code with pylama
+      run: python -m pylama $(git ls-files '*.py')
