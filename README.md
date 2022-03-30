@@ -54,7 +54,7 @@ Both can be installed via `pip`.
 Before sending the commit to the `master` branch, please, check your code:
 ```
 python -m pylint --rcfile=.pylintrc --py-version=3.8 $(git ls-files '*.py')
-python -m pydocstyle --convention=google $(git ls-files '*.py')
+python -m pydocstyle --match='(?!tests).*\.py' --convention=google $(git ls-files '*.py')
 ```
 
 ## Suggested CLI
