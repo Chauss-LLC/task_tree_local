@@ -47,14 +47,14 @@ https://www.mindmeister.com/
 
 ### Линтеры и код чекеры
 
-Для разработки наша команда использует `pylint` и `black`.
+Для разработки наша команда использует `pylint` и `pydocstyle`.
 
-Первый - лёгкий, быстрый и удобный линтер. Второй - автоформаттер `black`. Оба устанавливаются через `pip`.
+Оба устанавливаются через `pip`.
 
 Перед отправкой коммита в `master` ветку, убедительная просьба проверить свой код:
 ```
-python -m black -l 100 $(git ls-files '*.py')
-python -m pylint --load-plugins=pylint.extensions.mccabe --py-version=3.8 $(git ls-files '*.py')
+python -m pylint --py-version=3.8 $(git ls-files '*.py')
+python -m pydocstyle --convention=google $(git ls-files '*.py')
 ```
 
 ## Предполагаемый cli

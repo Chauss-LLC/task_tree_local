@@ -47,14 +47,14 @@ Maybe, the application will be broke down into several modules, but the goal fun
 
 ### Linters and code checkers
 
-Our team use `pylint` и `black` for development.
+Our team use `pylint` и `pydocstyle` for development.
 
-The first one - lightweight, fast and convenient linter. The second one - autoformatter `black`. Both can be installed via `pip`.
+Both can be installed via `pip`.
 
 Before sending the commit to the `master` branch, please, check your code:
 ```
-python -m black -l 100 $(git ls-files '*.py')
-python -m pylint --load-plugins=pylint.extensions.mccabe --py-version=3.8 $(git ls-files '*.py')
+python -m pylint --py-version=3.8 $(git ls-files '*.py')
+python -m pydocstyle --convention=google $(git ls-files '*.py')
 ```
 
 ## Suggested CLI
