@@ -1,6 +1,6 @@
 # task_tree_local
 
-<img src="logo_task_tree.png" alt="Logo of the project" width="200"/>
+<img src="logo_task_tree.svg" alt="Logo of the project" width="200"/>
 
 This is part of the big project `task_tree` for local use.
 
@@ -44,6 +44,18 @@ Maybe, the application will be broke down into several modules, but the goal fun
 	* `psycopg2`, `psycopg2-binary` or `sqlite3` (depending on the database we choose);
 	* `cmd`, `shlex`, `argparse`, `Colorama` (for CLI);
 	* `rich` (for printing the tree to the console).
+
+### Linters and code checkers
+
+Our team use `pylint` и `pydocstyle` for development.
+
+Both can be installed via `pip`.
+
+Before sending the commit to the `master` branch, please, check your code:
+```
+python -m pylint --rcfile=.pylintrc --py-version=3.8 $(git ls-files '*.py')
+python -m pydocstyle --convention=google $(git ls-files '*.py')
+```
 
 ## Suggested CLI
 
