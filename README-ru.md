@@ -1,6 +1,6 @@
 # task_tree_local
 
-<img src="logo_task_tree.png" alt="Логотип проекта" width="200"/>
+<img src="logo_task_tree.svg" alt="Логотип проекта" width="200"/>
 
 Это локальная часть большого проекта `task_tree`.
 
@@ -44,6 +44,18 @@ https://www.mindmeister.com/
 	* `psycopg2`, `psycopg2-binary` or `sqlite3` (в зависимости от того, какую БД мы выберем);
 	* `cmd`, `shlex`, `argparse`, `Colorama` (для cli);
 	* `rich` (для вывода дерева в терминал).
+
+### Линтеры и код чекеры
+
+Для разработки наша команда использует `pylint` и `pydocstyle`.
+
+Оба устанавливаются через `pip`.
+
+Перед отправкой коммита в `master` ветку, убедительная просьба проверить свой код:
+```
+python -m pylint --rcfile=.pylintrc --py-version=3.8 $(git ls-files '*.py')
+python -m pydocstyle --match='(?!tests).*\.py' --convention=google $(git ls-files '*.py')
+```
 
 ## Предполагаемый cli
 
