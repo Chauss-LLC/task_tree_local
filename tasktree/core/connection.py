@@ -3,18 +3,19 @@
 from typing import Iterable
 from tasktree.core.system import TaskSystem
 
+IdType = TaskSystem.IdType
 
 class Connection:
     """Connection between tasks."""
 
-    _id: str = ""
+    _id: IdType = IdType()
     tags: set = set()
 
     CHILD_TAG: str = "child"
     PARENT_TAG: str = "parent"
     SELF_TAG: str = "self"
 
-    def get_id(self) -> str:
+    def get_id(self) -> IdType:
         """Returns the id of a connected task."""
         return self._id
 
@@ -48,12 +49,11 @@ class Connection:
         self.tags.remove(tag)
         return True
 
-    def __init__(self, task_id: str, tags: Iterable = []):
+    def __init__(self, task_id: IdType, tags: Iterable = []):
         """Create a new connection with task id and specified tags."""
-        if len(task_id) < TaskSystem.MINIMAL_TASK_ID_LENGTH:
+        if TaskSystem.task_id_correct(task_id=task_id):
             raise ValueError(
-                "Task id must be at least "
-                f"{TaskSystem.MINIMAL_TASK_ID_LENGTH} characters length."
+                "Task id was discarded by TaskSystem."
             )
         self._id = task_id
         self.tags = set(tags)
