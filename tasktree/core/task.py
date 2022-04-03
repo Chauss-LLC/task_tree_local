@@ -26,7 +26,7 @@ class IdReadOnlyDescriptor:
         obj._id_field = val
         obj._id_set = True
 
-TaskIII = None
+TASKCLASS = None
 
 class TaskSystem:
     """Control the system of tasks."""
@@ -35,7 +35,7 @@ class TaskSystem:
     MINIMAL_TASK_ID_LENGTH = 6
 
     root: IdType
-    tasks: Dict[IdType, TaskIII] = dict()
+    tasks: Dict[IdType, TASKCLASS] = dict()
 
     def is_task_id_correct(self=None, task_id: IdType = IdType()) -> bool:
         """Check if task id is correct (allow to discard some ids)."""
@@ -48,8 +48,9 @@ class TaskSystem:
             random.choices(allowed_characters, k=TaskSystem.MINIMAL_TASK_ID_LENGTH)
         )
 
-    def create_task(self, *args, **kwargs) -> TaskIII:
+    def create_task(self, *args, **kwargs) -> TASKCLASS:
         """Create new task and set its internal pointer to the current system.
+
         For arguments see Task __init__ method.
         """
         kwargs['system'] = self
@@ -60,6 +61,7 @@ class Task:
     """The class representing the task."""
 
     """After initialization this field is read-only."""
+    # pylint: disable=C0116,C0103
     id: TaskSystem.IdType = IdReadOnlyDescriptor()
 
     system: TaskSystem
@@ -70,7 +72,7 @@ class Task:
     def __init__(self, title: str="Task template title", system: TaskSystem = None,
                  status: STATUS = STATUS.PENDING, task_id: TaskSystem.IdType = None, 
                  parent = None, children = None):
-        """Create a new Task. 
+        """Create a new Task.
 
         See below for more information. Children must be Iterable type contain either Task or id.
         Note that if you use id then you must provide system object.
@@ -115,8 +117,10 @@ class Task:
         return list(self.system.tasks[cnct._id] for cnct in self._cncts.with_tag("child"))
 
     def add_child(self, *args, **kwargs):
-        """Create new child of the current task. 
-        For arguments see Task __init__ method."""
+        """Create new child of the current task.
+
+        For arguments see Task __init__ method.
+        """
         kwargs["parent"] = self
         return Task(*args, **kwargs)
 
@@ -138,6 +142,7 @@ class Task:
 
     def __connect_parents_and_children(self, parent, children):
         """Connects selected parents and children assuming that the system pointers are correct everywhere (and inside ourself too).
+
         Establish connection to self, to children and to parent. Establish connection in children and in parent.
         :type children: Iterable of Tasks or None.
         :type parent: Task or None.
@@ -147,12 +152,13 @@ class Task:
             self._cncts.add_connection(c.Connection(parent.id, ["parent", "guard"]))
             parent._cncts.add_connection(c.Connection(self.id, ["child"]))
         if children is not None:
-            for ch in children:
-                self._cncts.add_connection(c.Connection(ch.id, ["child"]))
-                ch._cncts.add_connection(c.Connection(self.id, ["parent", "guard"]))
+            for child in children:
+                self._cncts.add_connection(c.Connection(child.id, ["child"]))
+                child._cncts.add_connection(c.Connection(self.id, ["parent", "guard"]))
 
     def __initialize_system_and_id(self, system: TaskSystem, task_id: TaskSystem.IdType) -> None:
-        """If system is not initialized, create a new one;
+        """If system is not initialized, create a new one.
+
         If id is not specified, generate a new one.
         Add myself to the system.
         """
@@ -179,6 +185,7 @@ class Task:
 
     def __try_to_obtain_system_from_arguments(self, parent, children) -> tuple:
         """Return tuple: [0] is for the system pointer obtained from the arguments and [1] is for new children iterable.
+
         If arguments contain pointers to different systems, will raise an Exception.
         """
         system = None
@@ -202,6 +209,7 @@ class Task:
 
     def __check_parent_and_children_for_same_system(self, system: TaskSystem, parent, children) -> Iterable:
         """With passed system pointer this function checks arguments for same pointer.
+        
         If we found a different system, then raises a ValueError.
         Return new pointer to the children iterable.
         """
@@ -215,4 +223,4 @@ class Task:
         return children
 
 
-TaskIII = Task
+TASKCLASS = Task

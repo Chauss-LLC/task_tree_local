@@ -13,7 +13,9 @@ class Connections:
     data: Set[c.Connection] = set()
 
     def __init__(self, connections: Iterable = [], self_id: IdType = None):
-        """Create new data structure for connection objects. If self_id is not None create connection to self.
+        """Create new data structure for connection objects.
+        
+        If self_id is not None create connection to self.
         Behavior is undefined if connections argument have some connection objects that have the same id.
         """
         connections = Connections.__check_iterable_have_only_connections(connections)
@@ -144,6 +146,7 @@ class Connections:
             return self.data.discard(key)
 
     def __eq__(self, other) -> bool:
+        """Compare 2 connetions object for equivalence."""
         if other is None: return False
         return json.dumps(self.to_json()) == json.dumps(other.to_json())
 
