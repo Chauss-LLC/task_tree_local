@@ -114,3 +114,14 @@ class TestConnection(unittest.TestCase):
         cnct = Connection(TestConnection.default_id)
         with self.assertRaises(Exception):
             cnct._id = TestConnection.other_id
+
+    def test_connection_after_copy_have_correct_tags(self):
+        test_tags: set = {'any', 'other', 'other2'}
+        cnct = Connection(TestConnection.default_id, test_tags)
+        cnct2 = cnct.copy(TestConnection.other_id)
+        self.assertSequenceEqual(test_tags, cnct2.tags)
+
+    def test_connection_copy_with_same_id_raises_exception(self):
+        cnct = Connection(TestConnection.default_id)
+        with self.assertRaises(Exception):
+            cnct2 = cnct.copy(TestConnection.default_id)

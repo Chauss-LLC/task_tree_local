@@ -44,6 +44,12 @@ class Connection:
         self._id = task_id
         self.tags = set(tags)
 
+    def copy(self, new_task_id: IdType):
+        """Create new Connection with the same tags. Do not pass the same id to it."""
+        if self._id == new_task_id:
+            raise ValueError("You used the same task id to create a new Connection. Consider change 'tags'-field.")
+        return Connection(new_task_id, self.tags)
+
     def get_id(self) -> IdType:
         """Returns the id of a connected task."""
         return self._id
