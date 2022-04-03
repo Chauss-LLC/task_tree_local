@@ -31,13 +31,6 @@ class Connection:
     CHILD_TAG: str = "child"
     PARENT_TAG: str = "parent"
     SELF_TAG: str = "self"
-  
-    def __check_task_id(self, task_id: IdType):
-        """Check if task id is correct and raise exception on failure."""
-        if not TaskSystem.is_task_id_correct(task_id=task_id):
-            raise ValueError(
-                "Task id was discarded by TaskSystem."
-            )
 
     def __init__(self, task_id: IdType, tags: Iterable = []):
         """Create a new connection with task id and specified tags."""
@@ -91,6 +84,13 @@ class Connection:
             if re.fullmatch(tag_patten, tag) is not None:
                 return True
         return False
+  
+    def __check_task_id(self, task_id: IdType):
+        """Check if task id is correct and raise exception on failure."""
+        if not TaskSystem.is_task_id_correct(task_id=task_id):
+            raise ValueError(
+                "Task id was discarded by TaskSystem."
+            )
 
     def __hash__(self) -> int:
         """Return hash of the connection."""
