@@ -3,7 +3,7 @@
 import unittest
 from tasktree.core.connection import Connection
 
-# Disable invalid names:
+# Disable invalid names & missing docstrings:
 # pylint: disable=C0116,C0103
 class TestConnection(unittest.TestCase):
     """Class for checking connection operations."""
