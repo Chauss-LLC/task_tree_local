@@ -109,3 +109,8 @@ class TestConnection(unittest.TestCase):
         b = set(s)
         s.add(Connection(TestConnection.default_id))
         self.assertTrue(s == b)
+
+    def test_connection_can_not_change_id(self):
+        cnct = Connection(TestConnection.default_id)
+        with self.assertRaises(Exception):
+            cnct._id = TestConnection.other_id
