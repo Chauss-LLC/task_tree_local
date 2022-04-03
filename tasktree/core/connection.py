@@ -5,10 +5,26 @@ from tasktree.core.system import TaskSystem
 
 IdType = TaskSystem.IdType
 
+class IdReadOnlyDescriptor:
+    """Descriptor for id field, so you can not modify id of the established connection."""
+
+    def __get__(self, obj, cls):
+        """Returns the id."""
+        return obj._id_field
+
+    def __set__(self, obj, val):
+        """Sets the id. Works only once for each object."""
+        if hasattr(obj, '_id_set') and obj._id_set:
+            raise TypeError(f"'{type(obj).__name__}' object does not support id assignment")
+        obj._id_field = val
+        obj._id_set = True
+
 class Connection:
     """Connection between tasks."""
 
-    _id: IdType = IdType()
+    """Id of the connection. Do not modify, create new Connection instead."""
+    _id: IdType = IdReadOnlyDescriptor()
+
     tags: set = set()
 
     CHILD_TAG: str = "child"
