@@ -14,6 +14,15 @@ class Connection:
     CHILD_TAG: str = "child"
     PARENT_TAG: str = "parent"
     SELF_TAG: str = "self"
+  
+    def __init__(self, task_id: IdType, tags: Iterable = []):
+        """Create a new connection with task id and specified tags."""
+        if not TaskSystem.is_task_id_correct(task_id=task_id):
+            raise ValueError(
+                "Task id was discarded by TaskSystem."
+            )
+        self._id = task_id
+        self.tags = set(tags)
 
     def get_id(self) -> IdType:
         """Returns the id of a connected task."""
@@ -49,11 +58,16 @@ class Connection:
         self.tags.remove(tag)
         return True
 
-    def __init__(self, task_id: IdType, tags: Iterable = []):
-        """Create a new connection with task id and specified tags."""
-        if not TaskSystem.is_task_id_correct(task_id=task_id):
-            raise ValueError(
-                "Task id was discarded by TaskSystem."
-            )
-        self._id = task_id
-        self.tags = set(tags)
+    def __hash__(self) -> int:
+        """Return hash of the connection."""
+        return hash(self._id)
+
+    def __eq__(self, other) -> bool:
+        """Compare 2 connetions object for equivalence."""
+        if not isinstance(other, type(self)): return NotImplemented
+        return self._id == other._id
+    
+    def __ne__(self, other) -> bool:
+        """Compare 2 connetions object for not equivalence."""
+        if not isinstance(other, type(self)): return NotImplemented
+        return self._id != other._id

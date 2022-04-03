@@ -9,6 +9,7 @@ class TestConnection(unittest.TestCase):
     """Class for checking connection operations."""
 
     default_id = "123456"
+    other_id = "654321"
 
     def test_connection_creation_raises_ValueError_if_id_is_empty_string(self):
         with self.assertRaises(Exception):
@@ -84,3 +85,27 @@ class TestConnection(unittest.TestCase):
         cnct = Connection(TestConnection.default_id, [test_tag,])
         cnct.remove_tag(test_tag)
         self.assertFalse(cnct.have_tag(test_tag))
+
+    def test_connections_are_same_after_create_with_same_id(self):
+        cnct = Connection(TestConnection.default_id)
+        cnct2 = Connection(TestConnection.default_id)
+        self.assertTrue(cnct == cnct2)
+        self.assertFalse(cnct != cnct2)
+
+    def test_connections_are_same_even_when_different_tags(self):
+        cnct = Connection(TestConnection.default_id, ['any', 'any2'])
+        cnct2 = Connection(TestConnection.default_id, ['other'])
+        self.assertTrue(cnct == cnct2)
+        self.assertFalse(cnct != cnct2)
+
+    def test_connections_not_same_when_create_with_different_id(self):
+        cnct = Connection(TestConnection.default_id)
+        cnct2 = Connection(TestConnection.other_id)
+        self.assertTrue(cnct != cnct2)
+        self.assertFalse(cnct == cnct2)
+
+    def test_connections_set_do_not_changes_when_add_connection_with_same_id(self):
+        s: set = {Connection(TestConnection.default_id)}
+        b = set(s)
+        s.add(Connection(TestConnection.default_id))
+        self.assertTrue(s == b)
