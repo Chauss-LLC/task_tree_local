@@ -31,12 +31,16 @@ class Connection:
     PARENT_TAG: str = "parent"
     SELF_TAG: str = "self"
   
-    def __init__(self, task_id: IdType, tags: Iterable = []):
-        """Create a new connection with task id and specified tags."""
+    def __check_task_id(self, task_id: IdType):
+        """Check if task id is correct and raise exception on failure."""
         if not TaskSystem.is_task_id_correct(task_id=task_id):
             raise ValueError(
                 "Task id was discarded by TaskSystem."
             )
+
+    def __init__(self, task_id: IdType, tags: Iterable = []):
+        """Create a new connection with task id and specified tags."""
+        self.__check_task_id(task_id)
         self._id = task_id
         self.tags = set(tags)
 
