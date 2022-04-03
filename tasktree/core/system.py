@@ -10,7 +10,7 @@ class TaskSystem:
     IdType = str
     MINIMAL_TASK_ID_LENGTH = 6
 
-    def task_id_correct(self=None, task_id: IdType = IdType()) -> bool:
+    def is_task_id_correct(self=None, task_id: IdType = IdType()) -> bool:
         """Check if task id is correct (allow to discard some ids)."""
         return len(task_id) >= TaskSystem.MINIMAL_TASK_ID_LENGTH
 

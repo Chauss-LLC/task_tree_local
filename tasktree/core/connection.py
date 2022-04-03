@@ -51,7 +51,7 @@ class Connection:
 
     def __init__(self, task_id: IdType, tags: Iterable = []):
         """Create a new connection with task id and specified tags."""
-        if TaskSystem.task_id_correct(task_id=task_id):
+        if not TaskSystem.is_task_id_correct(task_id=task_id):
             raise ValueError(
                 "Task id was discarded by TaskSystem."
             )
