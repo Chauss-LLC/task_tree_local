@@ -98,10 +98,21 @@ class Connection:
 
     def __eq__(self, other) -> bool:
         """Compare 2 connetions object for equivalence."""
+        if other is None: return False
         if not isinstance(other, type(self)): return NotImplemented
         return self._id == other._id
     
     def __ne__(self, other) -> bool:
         """Compare 2 connetions object for not equivalence."""
+        if other is None: return True
         if not isinstance(other, type(self)): return NotImplemented
         return self._id != other._id
+
+    def __lt__(self, other) -> bool:
+        """Compare 2 connetions object for order."""
+        if other is None: return False
+        return self._id.__lt__(other._id)
+
+    def __repr__(self) -> str:
+        """Return string representation of the connection."""
+        return f"<Connection {self._id}, {self.tags}>"
