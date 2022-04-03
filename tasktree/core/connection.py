@@ -1,5 +1,6 @@
 """Connection between tasks."""
 
+import re
 from typing import Iterable
 from tasktree.core.system import TaskSystem
 
@@ -83,6 +84,13 @@ class Connection:
             return False
         self.tags.remove(tag)
         return True
+
+    def fullmatch_any_tag(self, tag_patten: str) -> bool:
+        """Returns true if any of tags fully matches the regex pattern."""
+        for tag in self.tags:
+            if re.fullmatch(tag_patten, tag) is not None:
+                return True
+        return False
 
     def __hash__(self) -> int:
         """Return hash of the connection."""

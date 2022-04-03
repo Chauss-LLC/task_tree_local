@@ -125,3 +125,16 @@ class TestConnection(unittest.TestCase):
         cnct = Connection(TestConnection.default_id)
         with self.assertRaises(Exception):
             cnct2 = cnct.copy(TestConnection.default_id)
+
+    def test_fullmatch_any_tag_works_correct_on_nonempty_tags_sest(self):
+        test_tags: set = {'any', 'other', 'other2'}
+        cnct = Connection(TestConnection.default_id, test_tags)
+        self.assertTrue(cnct.fullmatch_any_tag("o\w*r")) # one match.
+        self.assertTrue(cnct.fullmatch_any_tag("^[a-zA-Z]+$")) # all matches.
+        self.assertTrue(cnct.fullmatch_any_tag("other2?")) # 2 matches.
+        self.assertFalse(cnct.fullmatch_any_tag("oth+")) # 0 matches.
+
+    def test_fullmatch_any_tag_works_correct_on_empty_tags_sest(self):
+        cnct = Connection(TestConnection.default_id)
+        self.assertFalse(cnct.fullmatch_any_tag("o\w*r"))
+        self.assertFalse(cnct.fullmatch_any_tag(""))
