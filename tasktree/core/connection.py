@@ -2,10 +2,23 @@
 
 import re
 from typing import Iterable
-from tasktree.core.system import TaskSystem, IdReadOnlyDescriptor
 
 
-IdType = TaskSystem.IdType
+IdType = str
+
+class IdReadOnlyDescriptor:
+    """Descriptor for id field, so you can not modify id of the established connection."""
+
+    def __get__(self, obj, cls):
+        """Returns the id."""
+        return obj._id_field
+
+    def __set__(self, obj, val):
+        """Sets the id. Works only once for each object."""
+        if hasattr(obj, '_id_set') and obj._id_set:
+            raise TypeError(f"'{type(obj).__name__}' object does not support id assignment")
+        obj._id_field = val
+        obj._id_set = True
 
 class Connection:
     """Connection between tasks."""
@@ -21,7 +34,7 @@ class Connection:
 
     def __init__(self, task_id: IdType, tags: Iterable = []):
         """Create a new connection with task id and specified tags."""
-        self.__check_task_id(task_id)
+        #TODOself.__check_task_id(task_id)
         self._id = task_id
         self.tags = set(tags)
 
@@ -72,12 +85,12 @@ class Connection:
                 return True
         return False
   
-    def __check_task_id(self, task_id: IdType):
-        """Check if task id is correct and raise exception on failure."""
-        if not TaskSystem.is_task_id_correct(task_id=task_id):
+    """def __check_task_id(self, task_id: IdType):
+        Check if task id is correct and raise exception on failure.
+        if not tcs.TaskSystem.is_task_id_correct(task_id=task_id):
             raise ValueError(
                 "Task id was discarded by TaskSystem."
-            )
+            )"""
 
     def __hash__(self) -> int:
         """Return hash of the connection."""

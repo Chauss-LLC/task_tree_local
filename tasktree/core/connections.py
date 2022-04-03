@@ -3,15 +3,14 @@
 import json
 from itertools import tee
 from typing import Generator, Iterable, Iterator, Set
-from tasktree.core.connection import Connection
-from tasktree.core.system import TaskSystem
+import tasktree.core.connection as c
 
-IdType = TaskSystem.IdType
+IdType = str
 
 class Connections:
     """Class for storing and manipulating connection objects."""
 
-    data: Set[Connection] = set()
+    data: Set[c.Connection] = set()
 
     def __init__(self, connections: Iterable = [], self_id: IdType = None):
         """Create new data structure for connection objects. If self_id is not None create connection to self.
@@ -20,9 +19,9 @@ class Connections:
         connections = Connections.__check_iterable_have_only_connections(connections)
         self.data = set(connections)
         if self_id is not None:
-            self.data.add(Connection(self_id, ["self", "guard"]))
+            self.data.add(c.Connection(self_id, ["self", "guard"]))
 
-    def find_connection(self, search_id: IdType) -> Connection:
+    def find_connection(self, search_id: IdType) -> c.Connection:
         """Find a connection object by task id or return None on failure."""
         try:
             connection = next(filter(lambda x: x._id == search_id, self.data))
@@ -63,25 +62,25 @@ class Connections:
         """Unite with other Connections."""
         self.data = Connections.__union_connections_sets(self.data, other.data)
 
-    def add_connection(self, cnct: Connection) -> None:
+    def add_connection(self, cnct: c.Connection) -> None:
         """Add a connection to connections."""
         self.__iadd__(cnct)
 
-    def remove_connection(self, cnct: Connection) -> None:
+    def remove_connection(self, cnct: c.Connection) -> None:
         """Remove a connection from connections."""
         self.__delitem__(cnct)
 
     @classmethod
-    def __union_connections_sets(cls, first: Set[Connection], second: Set[Connection]) -> Set[Connection]:
+    def __union_connections_sets(cls, first: Set[c.Connection], second: Set[c.Connection]) -> Set[c.Connection]:
         """Unite 2 connections sets. If 2 connection objects have the same id's then unite their tags."""
-        intersection: Set[Connection] = first & second
-        result: Set[Connection] = first ^ second
+        intersection: Set[c.Connection] = first & second
+        result: Set[c.Connection] = first ^ second
         for connection in intersection:
             # Assume in each set can not appear 2 connections with the same id.
             current_id = connection.get_id()
             tags_from_first: Set[str] = next(cnct.tags for cnct in first if cnct.get_id() == current_id)
             tags_from_second: Set[str] = next(cnct.tags for cnct in second if cnct.get_id() == current_id)
-            result.add(Connection(current_id, tags_from_first | tags_from_second))
+            result.add(c.Connection(current_id, tags_from_first | tags_from_second))
         return result
 
     @classmethod
@@ -89,12 +88,12 @@ class Connections:
         """Raise an exception if not all elements of value are connection objects. Returns the passed Iterable."""
         # In case generator was passed, we can empty it. Copy the passed iterable and return it so it can be still available.
         value, value_copy = tee(value) 
-        for c in value:
-            if not isinstance(c, Connection):
-                raise ValueError("Not all its elements are of type 'Connection'.")
+        for cnt in value:
+            if not isinstance(cnt, c.Connection):
+                raise ValueError("Not all its elements are of type 'c.Connection'.")
         return value_copy
 
-    def __getitem__(self, index: IdType) -> Connection:
+    def __getitem__(self, index: IdType) -> c.Connection:
         """Return connection object by task id."""
         return self.find_connection(index)
 
@@ -104,11 +103,11 @@ class Connections:
             self.union_connections(value)
         elif isinstance(value, Iterable):
             self.union_connections(Connections(value))
-        elif isinstance(value, Connection):
+        elif isinstance(value, c.Connection):
             self.union_connections(Connections([value, ]))
         elif isinstance(value, IdType):
             if value not in self.ids():
-                self.data.add(Connection(value))
+                self.data.add(c.Connection(value))
         else:
             raise TypeError(f"Unsupported operand type(s) for +=: 'Connections' and {type(value).__name__}")
         return self
@@ -134,14 +133,14 @@ class Connections:
         if isinstance(value, IdType):
             id_to_find = value
             return self.find_connection(id_to_find) is not None
-        connection_to_find: Connection = value
+        connection_to_find: c.Connection = value
         return self.find_connection(connection_to_find.get_id()) == connection_to_find
 
     def __delitem__(self, key) -> None:
         """Delete connection object. Argument can be a type of connection object or a task id."""
         if self.__contains__(key):
             if isinstance(key, IdType):
-                return self.data.discard(Connection(key))
+                return self.data.discard(c.Connection(key))
             return self.data.discard(key)
 
     def __eq__(self, other) -> bool:
