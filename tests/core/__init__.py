@@ -2,3 +2,4 @@
 
 
 from tests.core.connection import *
+from tests.core.connections import *
