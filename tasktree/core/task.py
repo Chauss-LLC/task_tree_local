@@ -120,6 +120,16 @@ class Task:
         kwargs["parent"] = self
         return Task(*args, **kwargs)
 
+    def change_parent(self, parent_id: TaskSystem.IdType):
+        """Change the parent by id. Disconnect if neccessary."""
+        if parent_id not in self.system.tasks:
+            raise ValueError("Can not change parent to the task from another system.")
+        if self.parent is not None:
+            del self.parent._cncts[self.id] # order is important
+            del self._cncts[self.parent.id]
+        self._cncts.add_connection(c.Connection(parent_id, [c.Connection.PARENT_TAG, "guard"]))
+        self.system.tasks[parent_id]._cncts.add_connection(c.Connection(self.id, [c.Connection.CHILD_TAG]))
+
     def __convert_id_to_task(self, task_id):
         """Get the id and return the task by searching in system. If passed type was Task then return it."""
         if isinstance(task_id, Task):
