@@ -53,7 +53,7 @@ https://www.mindmeister.com/
 
 Перед отправкой коммита в `master` ветку, убедительная просьба проверить свой код:
 ```
-python -m pylint --rcfile=.pylintrc --py-version=3.8 $(git ls-files '*.py')
+python -m pylint --py-version=3.8 $(git ls-files '*.py')
 python -m pydocstyle --match='(?!tests).*\.py' --convention=google $(git ls-files '*.py')
 ```
 
