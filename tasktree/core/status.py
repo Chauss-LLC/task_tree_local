@@ -21,3 +21,7 @@ class STATUS(Enum):
             case self.FAILED:
                 emj = ":cross_mark:"
         return emoji.emojize(emj)
+
+    def __int__(self):
+        """Convert status to integer."""
+        return self.value
