@@ -3,6 +3,7 @@
 from random import choice
 from anytree import NodeMixin
 from tasktree.core.status import STATUS
+from termcolor import colored
 
 
 class Task(NodeMixin):
@@ -28,3 +29,10 @@ class Task(NodeMixin):
         if children:
             self.children = children
         self._id = self.generate_new_id()
+
+    def __str__(self):
+        """Return a string representation of the Task."""
+        return str(self.status) + " " + self.name + " " + colored(f"(#{str(self.id)})", 'cyan')
+
+    def __repr__(self):
+        return f"Task({int(self.status)}, {self.name}, #{self.id})"
