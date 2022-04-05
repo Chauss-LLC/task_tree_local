@@ -30,6 +30,17 @@ class Task(NodeMixin):
             self.children = children
         self._id = self.generate_new_id()
 
+    def remove_child_by_id(self, id: int) -> bool:
+        """Remove a child from Task by id. Return true if the child was removed."""
+        if id in {t.id for t in self.children}:
+            self.children = (t for t in self.children if t.id != id)
+            return True
+        return False
+
+    def remove_child(self, child) -> bool:
+        """Remove a child from Task by object."""
+        return self.remove_child_by_id(child.id)
+
     def __str__(self):
         """Return a string representation of the Task."""
         return str(self.status) + " " + self.name + " " + colored(f"(#{str(self.id)})", 'cyan')
