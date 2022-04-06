@@ -1,6 +1,6 @@
 # task_tree_local
 
-<img src="logo_task_tree.png" alt="Logo of the project" width="200"/>
+<img src="logo_task_tree.svg" alt="Logo of the project" width="200"/>
 
 This is part of the big project `task_tree` for local use.
 
@@ -44,6 +44,18 @@ Maybe, the application will be broke down into several modules, but the goal fun
 	* `psycopg2`, `psycopg2-binary` or `sqlite3` (depending on the database we choose);
 	* `cmd`, `shlex`, `argparse`, `Colorama` (for CLI);
 	* `rich` (for printing the tree to the console).
+
+### Linters and code checkers
+
+Our team use `pylint` и `pydocstyle` for development.
+
+Both can be installed via `pip`.
+
+Before sending the commit to the `master` branch, please, check your code:
+```
+python -m pylint --good-names=i,j,k,ex,Run,_,id --py-version=3.8 $(git ls-files '*.py')
+python -m pydocstyle --match='(?!tests).*\.py' --convention=google $(git ls-files '*.py')
+```
 
 ## Suggested CLI
 
@@ -115,4 +127,26 @@ The text for localization - it is additional messages or text of errors, that we
 
 Here is the list of available development directions. Obviously, all that wont fit up into the semester project, anyway the existence of such a range of abilities and development directions itself already confirms our choose for `task_tree`.
 
-<!-- TODO: translate new section from russian to english. -->
+# Implementation Issues
+
+## Implementation Features or *what tasks can the project be divided into*
+
+<ins>We will take care of the architecture in advance</ins>, so in future the addition of new features will not require editing of existing code.
+
+The structure of the project *may be* like this:
+
+1. Module *core*. Provide direct tree editing.
+	* We need the next functionality:
+	* The tree vertexes (tasks) may have status `SOLVED`, `FAILED`, or `PENDING` (the default one). 
+	* You can add other tree vertexes to the tasks, also there must be different connections and automation (see [previous](#user-workflow))
+	* See [this issue for details](https://github.com/KH9IZ/task_tree_local/issues/6).
+2. Module *save/load*. Provide tree saving on the local machine.
+	* It may be database or binary or text file.
+	* However, if we separate this functionality in other module, in the future we can add other realization of this API: for example, access to the server and saving the tree on the remote device.
+3. Module *cli*. That is command line interface.
+	* The indispensable part of our product, because it is a mediator between the target user and the core module.
+	* Here we show the list of saved trees, show trees in a convenient way and provide some ways to interact with the *core* module.
+	* Of course, by separating the code, we make it possible to use some GUI instead of cli or something like frontend.
+4. Module *of exporting and importing the tree into the file*. May be merged with the 2nd one.
+	* The user may want to export the tree into the text file then make some editing in text editor and then perform the import.
+	* Now you can use not only cli but your own text editor also.
